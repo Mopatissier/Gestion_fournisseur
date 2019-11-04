@@ -257,7 +257,7 @@ Procedure AfficheCoord(in fourni : fournisseur)
 Afficher "id : ", fourni[i].id
 Afficher "nom : ", fourni[i].nom
 Afficher "tel : ", fourni[i].tel
-Afficher "mail : ", ourni[i].mail
+Afficher "mail : ", fourni[i].mail
 si(fourni[i].commande)
 alors
   Afficher "Commande attendue."
@@ -433,3 +433,4 @@ sinon
 fin si
 
 fin SupprimeFourni
+
