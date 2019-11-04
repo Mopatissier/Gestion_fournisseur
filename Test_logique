@@ -1,1 +1,436 @@
+Structure fournisseur
+  var id : N
+  var nom : T
+  var tel : T
+  var mail : T
+  var commande : B
+Fin fournisseur
+
+----------
+
+Debut TestLogistique
+
+Variables locales :
+var choix : N <- 0
+var fournisseur : fourni [50]
+var nbrFourni : N <- 0
+var id : N <- 0
+Fin variables locales
+
+tant que (choix != 7)
+  Afficher "Quelle option voulez-vous choisir ?"
+  Afficher "1) Ajouter un fournisseur."
+  Afficher "2) Afficher la liste des fournisseurs."
+  Afficher "3) Rechercher un fournisseur par id."
+  Afficher "4) Rechercher un fournisseur par nom."
+  Afficher "5) Modifier les coordonnées d'un fournisseur."
+  Afficher "6) Supprimer un fournisseur."
+  Afficher "7) Quitter le programme."
+  Saisir choix
+  
+  cas ou (choix) :
+  
+    cas 1
+      AjoutFourni(fourni, nbrFourni, id)
+      
+    cas 2
+      AfficherFourni(fourni, nbrFourni)
+      
+    cas 3
+      RechercheNum(fourni, nbrFourni)
+      
+    cas 4
+      RechercherNom(fourni, nbrFourni)
+      
+    cas 5
+      ModifFourni(fourni, nbrFourni)
+      
+    cas 6
+      SupprimeFourni(fourni, nbrFourni)
+    
+    cas 7
+    
+    autre cas
+      Afficher "Erreur, option non disponible."
+    
+  fin cas ou
+  
+fin tant que
+
+Fin TestLogistique
+
+----------
+
+Procedure AjoutFourni(in/out fourni : fournisseur[], in/out nbrFourni : N, in/out id : N)
+
+Variables locales :
+var nouveauFourni : fournisseur <- new fournisseur
+var choix : N <- 0
+var choixCommande : N <- 0
+Fin variables locales
+
+si(nbrFourni >= 50)
+alors
+  Afficher "Nombre max de fournisseurs atteint."
+sinon
+
+  repeter
+    Afficher "Entrez le nom."
+    Saisir nouveauFourni.nom
+  jusqu'à ce que (VerifNom(fourni, nbrFourni, nouveauFourni.nom))
+  
+  
+  Afficher "Entrez le numéro du téléphone."
+  Saisir nouveauFourni.tel
+  Afficher "Entre l'addresse mail."
+  Saisir nouveauFourni.mail
+  nouveauFourni.id <- id + 1
+
+  Afficher "Attendez-vous une commande ?"
+  Afficher "1) Oui."
+  Afficher "2) Non."
+  choixCommande <- 0
+        
+  tant que (choixCommande != 1 et choixCommande != 2)
+    Saisir choixCommande
+  fin tant que
+  
+  si(choixCommande = 1)
+  alors
+    modifFourni.commande <- VRAI
+  sinon
+    modifFourni.commande <- FAUX
+  fin si
+  
+  Afficher "Confirmez-vous ces données ?"
+  Afficher "1) Oui."
+  Afficher "2) Non."
+  
+  tant que (choix != 1 ET choix != 2)
+    Saisir choix
+  fin tant que
+  
+  si(choix = 1)
+  alors
+    nbrFourni <- nbrFourni + 1
+    id <- id + 1
+    fourni[nbrFourni] <- nouveauFourni
+  fin si
+  
+fin si
+
+fin AjoutFourni
+
+----------
+
+Fonction VerifNom(in fourni : fournisseur[], in nbrFourni : N, in nom : T) : B
+
+Variables locales :
+var verif : N <- 0
+var nomBon : B <- FAUX
+Fin variables locales
+
+si(longueur(nom) > 0)
+alors
+  verif <- 1
+  tant que (verif <= longueur(nom) et !nomBon)
+    si(caract(nouveauFourni.nom, verif) != ' ')
+    alors
+      nomBon <- VRAI
+    fin si
+    verif <- verif + 1
+  fin tant que
+      
+  si(!nomBon)
+  alors
+    Afficher "Veuillez mettre autre chose que juste des espaces."
+  fin si
+      
+sinon
+  Afficher "Veuillez écrire quelque chose."
+fin si
+    
+    
+verif <- 1
+tant que(verif <= nbrFourni et nomBon)
+  si(fourni[verif].nom = nouveauFourni.nom)
+  alors
+    Afficher "Fournisseur déjà enregistré."
+    nomBon <- FAUX
+  fin si
+  verif <- verif + 1
+fin tant que
+
+retourne nomBon
+
+fin VerifNom
+
+----------
+
+Procedure AfficherFourni(in fourni : fournisseur[], in nbrFourni : N)
+
+Variables locales :
+var i : N <- 0
+Fin variables locales
+
+si(nbrFourni < 1)
+alors
+  Afficher "La liste est vide."
+sinon
+  Pour i allant de (1 à nbrFourni)
+  
+    Afficher "id : ", fourni[i].id, ", nom : ", fourni[i].nom
+
+  fin pour
+fin si
+
+fin AfficherFourni
+
+----------
+
+Procedure RechercheNum(in fourni : fournisseur[], in nbrFourni : N)
+
+Variables locales :
+var cherche : N <- 0
+var i : N <- 0
+Fin Variables locales
+
+si(nbrFourni < 1)
+alors
+  Afficher "La liste est vide."
+sinon
+  Afficher "Entrez l'id du fournisseur à chercher."
+  Saisir cherche
+
+  i <- 1
+  tant que(i <= nbrFourni et cherche != fourni[i].id)
+    i <- i + 1
+  fin tant que
+  
+  si(i > nbrFourni)
+  alors
+    Afficher "Fournisseur introuvable."
+  sinon
+    AfficheCoord(fourni[i])
+  fin si
+
+fin si
+
+fin RechercheNum
+
+----------
+
+Procedure RechercheNom(in fourni : fournisseur[], in nbrFourni : N)
+
+Variables locales :
+var cherche : T <- 0
+var i : N <- 0
+Fin Variables locales
+
+si(nbrFourni < 1)
+alors
+  Afficher "La liste est vide."
+sinon
+  Afficher "Entrez le nom du fournisseur à chercher."
+  Saisir cherche
+
+  i <- 1
+  tant que(i <= nbrFourni et cherche != fourni[i].nom)
+    i <- i + 1
+  fin tant que
+  
+  si(i > nbrFourni)
+  alors
+    Afficher "Fournisseur introuvable."
+  sinon
+    AfficheCoord(fourni[i])
+  fin si
+
+fin si
+
+fin RechercheNum
+
+----------
+
+Procedure AfficheCoord(in fourni : fournisseur)
+
+Afficher "id : ", fourni[i].id
+Afficher "nom : ", fourni[i].nom
+Afficher "tel : ", fourni[i].tel
+Afficher "mail : ", ourni[i].mail
+si(fourni[i].commande)
+alors
+  Afficher "Commande attendue."
+sinon
+  Afficher "Pas de commande attendue."
+fin si
+
+fin AfficheCoord()
+
+----------
+
+Procedure ModifFourni(in/out fourni : fournisseur[], in nbrFourni : N)
+
+Variables locales :
+var cherche : N <- 0
+var i : N <- 0
+var modifFourni : fournisseur <- new fournisseur
+var choix : N <- 0
+var choixCommande : N <- 0
+Fin Variables locales
+
+si(nbrFourni < 1)
+alors
+  Afficher "La liste est vide."
+sinon
+  Afficher "Entrez l'id du fournisseur à chercher."
+  Saisir cherche
+
+  i <- 1
+  tant que(i <= nbrFourni et cherche != fourni[i].id)
+    i <- i + 1
+  fin tant que
+  
+  si(i > nbrFourni)
+  alors
+    Afficher "Fournisseur introuvable."
+  sinon
+    CopieFourni(modifFourni, fourni[i])
+    
+    tant que (choix != 5)
+      AfficheCoord(modifFourni)
+      Afficher "Que modifier ?"
+      Afficher "1) Le nom."
+      Afficher "2) Le téléphone."
+      Afficher "3) Le mail."
+      Afficher "4) La commande."
+      Afficher "5) Quitter."
+      
+      Saisir choix
+      
+      cas ou (choix)
+      
+      cas 1
+        repeter
+          Afficher "Entrez le nom."
+          Saisir modifFourni.nom
+        jusqu'à ce que (VerifNom(fourni, nbrFourni, modifFourni.nom))
+      
+      cas 2
+        Afficher "Entrez le numéro du téléphone."
+        Saisir modifFourni.tel
+        
+      cas 3
+        Afficher "Entre l'addresse mail."
+        Saisir nouveauFourni.mail
+        
+      cas 4
+        Afficher "Attendez-vous une commande ?"
+        Afficher "1) Oui."
+        Afficher "2) Non."
+        choixCommande <- 0
+        
+        tant que (choixCommande != 1 et choixCommande != 2)
+          Saisir choixCommande
+        fin tant que
+        
+        si(choixCommande = 1)
+        alors
+          modifFourni.commande <- VRAI
+        sinon
+          modifFourni.commande <- FAUX
+        fin si
+        
+      cas 5
+      
+      autre cas
+        Afficher "Erreur, option non disponible."
+        
+    fin tant que
+    
+    Afficher "Confirmez-vous ces données ?"
+    Afficher "1) Oui."
+    Afficher "2) Non."
+  
+    tant que (choix != 1 ET choix != 2)
+      Saisir choix
+    fin tant que
+  
+    si(choix = 1)
+    alors
+      fourni[i] <- modifFourni
+    fin si
+    
+    fin si
+  fin si
+fin si
+
+fin ModifFourni
+
+----------
+
+Procedure CopieFourni(in/out f1 : fournisseur, in f2 : fournisseur)
+
+f1.id <- f2.id
+f1.nom <- f2.nom
+f1.tel <- f2.tel
+f1.mail <- f2.mail
+Òf1.commande <- f2.commande
+
+fin CopieFourni
+
+----------
+
+Procedure SupprimeFourni(in/out fourni : fournisseur[], int/out nbrFourni : N)
+
+Variables locales :
+var i : N <- 0
+var idSupprime : N <- 0
+var choix : N <- 0
+Fin Variables locales
+
+si(nbrFourni < 1)
+alors
+  Afficher "La liste est vide."
+sinon
+  Afficher "Entre l'id du fournisseur à supprimer."
+  Saisir idSupprime
+  
+  i <- 1
+  tant que(i <= nbrFourni et idSupprime != fourni[i].id)
+    i <- i + 1
+  fin tant que
+  
+  si(i > nbrFourni)
+  alors
+    Afficher "Fournisseur introuvable."
+  sinon
+    si(fourni[i].commande)
+    alors
+      Afficher "Une commande est en cours, refus de suppression."
+    sinon
+      AfficheCoord(fourni[i])
+      
+      Afficher "Êtes-vous sur de supprimer ces données ?"
+      Afficher "1) Oui."
+      Afficher "2) Non."
+  
+      tant que (choix != 1 ET choix != 2)
+        Saisir choix
+      fin tant que
+  
+      si(choix = 1)
+      alors
+        tant que (i < nbrFourni)
+          fourni[i] <- fourni[i+1]
+          i <- i + 1 
+        fin tant que
+        nbrFourni <- nbrFourni - 1
+      fin si   
+      
+    fin si
+  fin si
+fin si
+
+fin SupprimeFourni
 
